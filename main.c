@@ -56,6 +56,19 @@ void setOffset()
     SetConsoleCursorPosition(hnd, myCord);
 }
 
+bool gameRunning = true;
+int score = 0;
+
+void printScore(int sc)
+{
+    printf("Score: %d", sc);
+}
+
+void addScoreAndRefresh()
+{
+    printScore(score++);
+}
+
 
 void drawArea()
 {
@@ -69,6 +82,7 @@ void drawArea()
 
         printf("\n");
     }
+    if (score == 0) addScoreAndRefresh();
 }
 
 void addSnakeToArea()
@@ -117,7 +131,8 @@ void generateBaseArea(Area* a)
 
 void gameOver()
 {
-    printf("Game Over");
+    printf("Game Over, your score - %d", --score);
+    gameRunning = false;
     exit(0);
 }
 
@@ -150,6 +165,7 @@ void isWithFoodPoint(bool* hasFd, int tailIdx, int headIdx)
         snake.body[tailIdx + 1].x = snake.body[tailIdx].x;
         snake.len++;
         *hasFd = false;
+        addScoreAndRefresh();
     }
 }
 
@@ -290,7 +306,7 @@ int main(int argc, char* argv[])
     srand(time(NULL));
     hideConsoleCursor();
     generateBaseArea(&area);
-    while (1)
+    while (gameRunning)
     {
         moveSnake(&hasFood);
         addSnakeToArea();
